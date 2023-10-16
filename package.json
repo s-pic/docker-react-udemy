@@ -18,6 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "docker build -f Dockerfile.dev -t spic/react-frontend-v2 .",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
