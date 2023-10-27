@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -16,14 +16,20 @@ jobs:
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
 
-#      - name: Deploy to EB
-#        uses: einaregilsson/beanstalk-deploy@v18
-#        with:
-#          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-#          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-#          application_name: docker-gh
-#          environment_name: Dockergh-env
-#          existing_bucket_name: elasticbeanstalk-us-east-1-923445559289
-#          region: us-east-1
-#          version_label: ${{ github.sha }}
-#          deployment_package: deploy.zip
+  build_and_deploy_to_ebs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+      - name: Upload to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v18
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: spicreactudemy
+          environment_name: Spicreactudemy-env
+          existing_bucket_name: elasticbeanstalk-eu-central-1-761478465753
+          region: eu-central-1
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
